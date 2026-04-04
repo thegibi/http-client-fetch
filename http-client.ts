@@ -273,6 +273,16 @@ export class HttpClient {
     return response.text().catch(() => null);
   }
 
+  private headersToObject(headers: Headers): Record<string, string> {
+    const result: Record<string, string> = {};
+
+    headers.forEach((value, key) => {
+      result[key] = value;
+    });
+
+    return result;
+  }
+
   private async dispatchRequest(config: any): Promise<any> {
     const { url, method, data, headers, params, baseURL, signal, timeout } =
       config;
@@ -323,7 +333,7 @@ export class HttpClient {
         data: responseData,
         status: response.status,
         statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
+        headers: this.headersToObject(response.headers),
         config,
       };
 
@@ -404,9 +414,13 @@ export interface HttpClientInstance {
     response: HttpClientInterceptorManager<HttpClientResponse>;
   };
 
-  request<T = any>(config: HttpClientRequestConfig): Promise<HttpClientResponse<T>>;
-  request<T = any>(url: string, config?: HttpClientRequestConfig): Promise<HttpClientResponse<T>>;
-
+  request<T = any>(
+    config: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
+  request<T = any>(
+    url: string,
+    config?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
   get<T = any>(
     url: string,
     config?: HttpClientRequestConfig,
@@ -438,7 +452,6 @@ export interface HttpClientInstance {
     data?: any,
     config?: HttpClientRequestConfig,
   ): Promise<HttpClientResponse<T>>;
-
   create(config?: HttpClientRequestConfig): HttpClientInstance;
   HttpClientError: typeof HttpClientError;
 }
