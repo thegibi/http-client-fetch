@@ -1,3 +1,47 @@
+// Type definitions
+export type Method =
+  | 'get'
+  | 'GET'
+  | 'delete'
+  | 'DELETE'
+  | 'head'
+  | 'HEAD'
+  | 'options'
+  | 'OPTIONS'
+  | 'post'
+  | 'POST'
+  | 'put'
+  | 'PUT'
+  | 'patch'
+  | 'PATCH';
+
+export interface HttpClientRequestConfig<D = any> {
+  url?: string;
+  method?: Method;
+  baseURL?: string;
+  headers?: Record<string, string | number | boolean>;
+  params?: Record<string, any>;
+  data?: D;
+  timeout?: number;
+  signal?: AbortSignal;
+}
+
+export interface HttpClientResponse<T = any> {
+  data: T;
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+  config: HttpClientRequestConfig;
+}
+
+export interface HttpClientInterceptorManager<V> {
+  use(
+    onFulfilled?: (value: V) => V | Promise<V>,
+    onRejected?: (error: any) => any,
+  ): number;
+  eject(id: number): void;
+}
+
 export enum HttpStatusCode {
   Ok = 200,
   Created = 201,
@@ -342,15 +386,64 @@ export class HttpClient {
   }
 }
 
-const createInstance = (config?: any) => {
+const createInstance = (config?: any): HttpClientInstance => {
   const context = new HttpClient(config);
   const instance = context.request.bind(context) as any;
   Object.assign(instance, context);
   Object.setPrototypeOf(instance, HttpClient.prototype);
-  return instance;
+  return instance as HttpClientInstance;
 };
 
-const httpClient = createInstance();
+export interface HttpClientInstance {
+  (config: HttpClientRequestConfig): Promise<HttpClientResponse>;
+  (url: string, config?: HttpClientRequestConfig): Promise<HttpClientResponse>;
+
+  defaults: any;
+  interceptors: {
+    request: HttpClientInterceptorManager<HttpClientRequestConfig>;
+    response: HttpClientInterceptorManager<HttpClientResponse>;
+  };
+
+  request<T = any>(config: HttpClientRequestConfig): Promise<HttpClientResponse<T>>;
+  request<T = any>(url: string, config?: HttpClientRequestConfig): Promise<HttpClientResponse<T>>;
+
+  get<T = any>(
+    url: string,
+    config?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
+  delete<T = any>(
+    url: string,
+    config?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
+  post<T = any>(
+    url: string,
+    data?: any,
+    config?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
+  head<T = any>(
+    url: string,
+    config?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
+  options<T = any>(
+    url: string,
+    config?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
+  put<T = any>(
+    url: string,
+    data?: any,
+    config?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
+  patch<T = any>(
+    url: string,
+    data?: any,
+    config?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<T>>;
+
+  create(config?: HttpClientRequestConfig): HttpClientInstance;
+  HttpClientError: typeof HttpClientError;
+}
+
+const httpClient: HttpClientInstance = createInstance();
 httpClient.create = createInstance;
 httpClient.HttpClientError = HttpClientError;
 
