@@ -1,0 +1,180 @@
+# Native HttpClient
+
+A lightweight Axios-inspired HTTP client built on top of the native Fetch API.
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node](https://img.shields.io/badge/Node-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+
+## Why this project
+
+Modern Node.js and browsers already ship with fetch. This library keeps the Axios-style developer experience (instances, defaults, interceptors, and error shape) without adding an HTTP dependency.
+
+## Features
+
+- Axios-like API: `get`, `post`, `put`, `patch`, `delete`, `head`, `options`, and `request`
+- Callable instance style: `api('/users', config)`
+- Request and response interceptors
+- Config defaults with `create(...)`
+- Typed responses with TypeScript generics
+- Native fetch under the hood
+
+## Compatibility
+
+- Node.js 18+
+- Modern browsers with native fetch support
+- TypeScript projects (declaration file included)
+
+## Installation
+
+```bash
+npm install
+```
+
+## Development
+
+```bash
+# Type-check and build
+npm run build
+
+# Run sample entrypoint
+npm run start
+
+# Run in watch mode
+npm run dev
+```
+
+Current npm scripts in `package.json` point to `index.ts` at project root for `start` and `dev`.
+
+## Quick Start
+
+```ts
+import httpClient, { HttpClientError, HttpStatusCode } from './http-client';
+
+const api = httpClient.create({
+  baseURL: 'https://jsonplaceholder.typicode.com',
+  timeout: 5000,
+  headers: {
+    'X-Custom-Header': 'MyClient',
+  },
+});
+
+api.interceptors.request.use((config) => {
+  config.headers = config.headers || {};
+  config.headers.Authorization = 'Bearer TOKEN_123';
+  return config;
+});
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => Promise.reject(error),
+);
+
+async function run() {
+  try {
+    const post = await api.get('/posts/1');
+    console.log(post.data);
+
+    const comments = await api('/comments', {
+      method: 'GET',
+      params: { postId: 1 },
+    });
+    console.log(comments.data);
+
+    const created = await api.request('/posts', {
+      method: 'POST',
+      data: {
+        title: 'New Post',
+        body: 'Post content sent via httpClient',
+        userId: 1,
+      },
+    });
+
+    console.log(created.status === HttpStatusCode.Created);
+  } catch (error: any) {
+    if (error instanceof HttpClientError || error?.isHttpClientError) {
+      console.error(error.message, error.code, error.response?.status);
+      return;
+    }
+
+    console.error(error);
+  }
+}
+
+run();
+```
+
+## API Reference
+
+### Create a client
+
+```ts
+const api = httpClient.create({
+  baseURL: 'https://api.example.com',
+  timeout: 5000,
+  headers: {
+    'X-App': 'demo',
+  },
+});
+```
+
+### Request methods
+
+| Method                           | Signature                                                                        |
+| -------------------------------- | -------------------------------------------------------------------------------- |
+| `api(config)`                    | `(config: HttpClientRequestConfig) => Promise<HttpClientResponse>`               |
+| `api(url, config)`               | `(url: string, config?: HttpClientRequestConfig) => Promise<HttpClientResponse>` |
+| `api.request(...)`               | Same as callable signatures                                                      |
+| `api.get(url, config?)`          | `Promise<HttpClientResponse<T>>`                                                 |
+| `api.delete(url, config?)`       | `Promise<HttpClientResponse<T>>`                                                 |
+| `api.head(url, config?)`         | `Promise<HttpClientResponse<T>>`                                                 |
+| `api.options(url, config?)`      | `Promise<HttpClientResponse<T>>`                                                 |
+| `api.post(url, data?, config?)`  | `Promise<HttpClientResponse<T>>`                                                 |
+| `api.put(url, data?, config?)`   | `Promise<HttpClientResponse<T>>`                                                 |
+| `api.patch(url, data?, config?)` | `Promise<HttpClientResponse<T>>`                                                 |
+
+### Interceptors
+
+```ts
+const id = api.interceptors.request.use(
+  (config) => config,
+  (error) => Promise.reject(error),
+);
+
+api.interceptors.request.eject(id);
+```
+
+## Type Safety
+
+```ts
+interface User {
+  id: number;
+  name: string;
+}
+
+const response = await api.get<User>('/users/1');
+console.log(response.data.name);
+```
+
+## Error Handling
+
+The client throws `HttpClientError` for:
+
+- HTTP non-2xx responses (`ERR_BAD_RESPONSE`)
+- Network failures (`ERR_NETWORK`)
+- Timeout (`ECONNABORTED`)
+- Abort/cancel (`ERR_CANCELED`)
+
+For non-2xx responses, `error.response` contains:
+
+- `data`
+- `status`
+- `statusText`
+- `headers`
+- `config`
+
+## Notes
+
+- Uses native fetch from the runtime.
+- Timeout is implemented via `AbortController`.
+- GET and HEAD requests ignore request body.
+- JSON payloads are stringified automatically and `Content-Type: application/json` is set when not provided.
