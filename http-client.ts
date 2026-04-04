@@ -1,4 +1,3 @@
-// Type definitions
 export type Method =
   | 'get'
   | 'GET'
@@ -61,9 +60,9 @@ export class HttpClientError<T = unknown, D = any> extends Error {
   constructor(
     message?: string,
     public code?: string,
-    public config?: any,
+    public config?: HttpClientRequestConfig<D>,
     public request?: any,
-    public response?: any,
+    public response?: HttpClientResponse<T>,
   ) {
     super(message);
     Object.setPrototypeOf(this, HttpClientError.prototype);
