@@ -39,7 +39,7 @@ export const handlers = [
 
   // POST /users
   http.post(`${API_BASE}/users`, async ({ request }) => {
-    const body = await request.json();
+    const body: Record<string, unknown> = await request.json();
     return HttpResponse.json(
       {
         id: 3,
@@ -51,7 +51,7 @@ export const handlers = [
 
   // PUT /users/:id
   http.put(`${API_BASE}/users/:id`, async ({ request, params }) => {
-    const body = await request.json();
+    const body: Record<string, unknown> = await request.json();
     return HttpResponse.json({
       id: Number(params.id),
       ...body,
@@ -60,7 +60,7 @@ export const handlers = [
 
   // PATCH /users/:id
   http.patch(`${API_BASE}/users/:id`, async ({ request, params }) => {
-    const body = await request.json();
+    const body: Record<string, unknown> = await request.json();
     return HttpResponse.json({
       id: Number(params.id),
       ...body,
