@@ -1,6 +1,12 @@
+import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@http-client': resolve(__dirname, 'src/http-client'),
+    },
+  },
   test: {
     globals: true,
     environment: 'happy-dom',

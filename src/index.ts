@@ -1,4 +1,4 @@
-import httpClient, { HttpClientError, HttpStatusCode } from './http-client';
+import httpClient, { HttpClientError, HttpStatusCode } from '@http-client';
 
 const api = httpClient.create({
   baseURL: 'https://jsonplaceholder.typicode.com',

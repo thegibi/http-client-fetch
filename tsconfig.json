@@ -5,6 +5,10 @@
     "lib": ["ESNext", "DOM"],
     "outDir": "./dist",
     "rootDir": "./src",
+    "baseUrl": "./",
+    "paths": {
+      "@http-client": ["src/http-client"]
+    },
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
