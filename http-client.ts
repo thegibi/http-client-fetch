@@ -14,6 +14,10 @@ export type Method =
   | 'patch'
   | 'PATCH';
 
+export interface HttpHeaders {
+  [header: string]: string | number | boolean;
+}
+
 export interface HttpClientRequestConfig<D = any> {
   url?: string;
   method?: Method;
@@ -395,7 +399,9 @@ export class HttpClient {
   }
 }
 
-const createInstance = (config?: any): HttpClientInstance => {
+const createInstance = (
+  config?: HttpClientRequestConfig,
+): HttpClientInstance => {
   const context = new HttpClient(config);
   const instance = context.request.bind(context) as any;
   Object.assign(instance, context);

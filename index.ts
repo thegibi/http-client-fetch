@@ -8,7 +8,7 @@ const api = httpClient.create({
   },
 });
 
-api.interceptors.request.use((config: any) => {
+api.interceptors.request.use((config) => {
   console.log(
     `[Request] ${config.method?.toUpperCase()} ${config.baseURL || ''}${config.url}`,
   );
