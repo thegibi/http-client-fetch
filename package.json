@@ -1,6 +1,6 @@
 {
   "name": "http-client-fetch",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A lightweight Axios-inspired implementation using Node.js native Fetch API",
   "main": "dist/http-client.js",
   "scripts": {
