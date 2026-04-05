@@ -43,12 +43,45 @@ npm run start
 npm run dev
 ```
 
-Current npm scripts in `package.json` point to `index.ts` at project root for `start` and `dev`.
+Current npm scripts in `package.json` point to `src/index.ts` for `start` and `dev`.
+
+## Testing
+
+This project uses [Vitest](https://vitest.dev/) for unit testing and [MSW](https://mswjs.io/) (Mock Service Worker) for mocking HTTP requests.
+
+### Run Tests
+
+```bash
+# Watch mode - re-runs on file changes
+npm run test
+
+# Single run (useful for CI/CD)
+npm run test:run
+
+# Visual test runner UI
+npm run test:ui
+
+# Generate coverage report
+npm run test:coverage
+```
+
+### Test Coverage
+
+The test suite includes 27 comprehensive tests covering:
+
+- All HTTP methods (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)
+- Request and response interceptors
+- Error handling and HTTP status codes
+- Headers management and merging
+- Instance creation and isolation
+- Query parameters and timeout configuration
+
+All tests run against mocked HTTP endpoints, ensuring fast and reliable execution without external dependencies.
 
 ## Quick Start
 
 ```ts
-import httpClient, { HttpClientError, HttpStatusCode } from './http-client';
+import httpClient, { HttpClientError, HttpStatusCode } from './src/http-client';
 
 const api = httpClient.create({
   baseURL: 'https://jsonplaceholder.typicode.com',

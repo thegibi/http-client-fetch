@@ -1,13 +1,16 @@
 {
   "name": "http-client-fetch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight Axios-inspired implementation using Node.js native Fetch API",
   "main": "dist/http-client.js",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node index.ts",
-    "dev": "ts-node-dev --respawn index.ts",
-    "example": "node --experimental-transform-types index.ts"
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "http",
@@ -19,8 +22,13 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^4.1.2",
+    "@vitest/ui": "^4.1.2",
+    "happy-dom": "^20.8.9",
+    "msw": "^2.12.14",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.2"
   }
 }
