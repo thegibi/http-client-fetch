@@ -43,7 +43,7 @@ npm run start
 npm run dev
 ```
 
-Current npm scripts in `package.json` point to `sample/index.ts` for `start` and `dev`, while `src/index.ts` is the library entrypoint.
+Current npm scripts in `package.json` point to `src/index.ts` for `start` and `dev`, while `src/nexus.ts` is the library entrypoint.
 
 ## Testing
 
@@ -81,7 +81,7 @@ All tests run against mocked HTTP endpoints, ensuring fast and reliable executio
 ## Quick Start
 
 ```ts
-import nexus, { HttpError, HttpStatusCode } from './src';
+import nexus, { HttpError, HttpStatusCode } from '@nexus';
 
 const api = nexus.create({
   baseURL: 'https://jsonplaceholder.typicode.com',

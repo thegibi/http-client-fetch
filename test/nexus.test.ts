@@ -1,6 +1,5 @@
-import { HttpMethods } from 'msw';
 import { beforeEach, describe, expect, it } from 'vitest';
-import nexus, { HttpError } from '../src';
+import nexus, { HttpError } from '../src/nexus';
 import { API_URL } from './handlers';
 
 describe('Nexus', () => {
@@ -354,7 +353,7 @@ describe('Nexus', () => {
 
       for (const method of methods)
       {
-        expect(typeof HttpMethods).toBe('function');
+        expect(typeof (api as any)[method]).toBe('function');
       }
     });
   });
