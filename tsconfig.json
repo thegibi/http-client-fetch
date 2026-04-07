@@ -7,7 +7,7 @@
     "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
-      "@http-client": ["src/http-client"]
+      "@nexus": ["src/index"]
     },
     "strict": true,
     "esModuleInterop": true,

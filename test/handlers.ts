@@ -39,7 +39,7 @@ export const handlers = [
 
   // POST /users
   http.post(`${API_BASE}/users`, async ({ request }) => {
-    const body: Record<string, unknown> = await request.json();
+    const body = await request.json();
     return HttpResponse.json(
       {
         id: 3,

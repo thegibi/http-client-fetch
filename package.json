@@ -1,12 +1,12 @@
 {
-  "name": "http-client-fetch",
-  "version": "1.0.6",
-  "description": "A lightweight Axios-inspired implementation using Node.js native Fetch API",
-  "main": "dist/http-client.js",
+  "name": "nexus",
+  "version": "1.0.7",
+  "description": "A lightweight inspired HTTP client and server implementation using native Fetch API",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc && tsc-alias",
-    "start": "ts-node -r tsconfig-paths/register src/index.ts",
-    "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/index.ts",
+    "start": "ts-node -r tsconfig-paths/register sample/index.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn sample/index.ts",
     "test": "vitest",
     "test:run": "vitest run",
     "test:ui": "vitest --ui",

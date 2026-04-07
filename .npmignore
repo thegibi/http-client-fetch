@@ -1,5 +1,6 @@
 src/
 test/
+sample/
 
 # Build/test/config artifacts not needed in npm package
 coverage/

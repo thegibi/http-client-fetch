@@ -1,17 +1,17 @@
-# Native HttpClient
+# Native Nexus
 
-A lightweight Axios-inspired HTTP client built on top of the native Fetch API.
+A lightweight inspired HTTP client and server implementation using native Fetch API.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node](https://img.shields.io/badge/Node-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 
 ## Why this project
 
-Modern Node.js and browsers already ship with fetch. This library keeps the Axios-style developer experience (instances, defaults, interceptors, and error shape) without adding an HTTP dependency.
+Modern Node.js and browsers already ship with fetch. This library keeps the developer experience (instances, defaults, interceptors, and error shape) without adding an HTTP dependency.
 
 ## Features
 
-- Axios-like API: `get`, `post`, `put`, `patch`, `delete`, `head`, `options`, and `request`
+- HTTP methods: `get`, `post`, `put`, `patch`, `delete`, `head`, `options`, and `request`
 - Callable instance style: `api('/users', config)`
 - Request and response interceptors
 - Config defaults with `create(...)`
@@ -43,7 +43,7 @@ npm run start
 npm run dev
 ```
 
-Current npm scripts in `package.json` point to `src/index.ts` for `start` and `dev`.
+Current npm scripts in `package.json` point to `sample/index.ts` for `start` and `dev`, while `src/index.ts` is the library entrypoint.
 
 ## Testing
 
@@ -81,9 +81,9 @@ All tests run against mocked HTTP endpoints, ensuring fast and reliable executio
 ## Quick Start
 
 ```ts
-import httpClient, { HttpClientError, HttpStatusCode } from './src/http-client';
+import nexus, { HttpError, HttpStatusCode } from './src';
 
-const api = httpClient.create({
+const api = nexus.create({
   baseURL: 'https://jsonplaceholder.typicode.com',
   timeout: 5000,
   headers: {
@@ -117,14 +117,14 @@ async function run() {
       method: 'POST',
       data: {
         title: 'New Post',
-        body: 'Post content sent via httpClient',
+        body: 'Post content sent via nexus',
         userId: 1,
       },
     });
 
     console.log(created.status === HttpStatusCode.Created);
   } catch (error: any) {
-    if (error instanceof HttpClientError || error?.isHttpClientError) {
+    if (error instanceof HttpError || error?.isHttpError) {
       console.error(error.message, error.code, error.response?.status);
       return;
     }
@@ -136,12 +136,20 @@ async function run() {
 run();
 ```
 
+## Example
+
+For a complete integration example with Next.js, see the sample app repository:
+
+- [next-example](https://github.com/thegibi/next-example)
+
+It shows how to use this HTTP client and server in a Next.js project structure.
+
 ## API Reference
 
 ### Create a client
 
 ```ts
-const api = httpClient.create({
+const api = nexus.create({
   baseURL: 'https://api.example.com',
   timeout: 5000,
   headers: {
@@ -152,18 +160,18 @@ const api = httpClient.create({
 
 ### Request methods
 
-| Method                           | Signature                                                                        |
-| -------------------------------- | -------------------------------------------------------------------------------- |
-| `api(config)`                    | `(config: HttpClientRequestConfig) => Promise<HttpClientResponse>`               |
-| `api(url, config)`               | `(url: string, config?: HttpClientRequestConfig) => Promise<HttpClientResponse>` |
-| `api.request(...)`               | Same as callable signatures                                                      |
-| `api.get(url, config?)`          | `Promise<HttpClientResponse<T>>`                                                 |
-| `api.delete(url, config?)`       | `Promise<HttpClientResponse<T>>`                                                 |
-| `api.head(url, config?)`         | `Promise<HttpClientResponse<T>>`                                                 |
-| `api.options(url, config?)`      | `Promise<HttpClientResponse<T>>`                                                 |
-| `api.post(url, data?, config?)`  | `Promise<HttpClientResponse<T>>`                                                 |
-| `api.put(url, data?, config?)`   | `Promise<HttpClientResponse<T>>`                                                 |
-| `api.patch(url, data?, config?)` | `Promise<HttpClientResponse<T>>`                                                 |
+| Method                           | Signature                                                              |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| `api(config)`                    | `(config: NexusRequestConfig) => Promise<NexusResponse>`               |
+| `api(url, config)`               | `(url: string, config?: NexusRequestConfig) => Promise<NexusResponse>` |
+| `api.request(...)`               | Same as callable signatures                                            |
+| `api.get(url, config?)`          | `Promise<NexusResponse<T>>`                                            |
+| `api.delete(url, config?)`       | `Promise<NexusResponse<T>>`                                            |
+| `api.head(url, config?)`         | `Promise<NexusResponse<T>>`                                            |
+| `api.options(url, config?)`      | `Promise<NexusResponse<T>>`                                            |
+| `api.post(url, data?, config?)`  | `Promise<NexusResponse<T>>`                                            |
+| `api.put(url, data?, config?)`   | `Promise<NexusResponse<T>>`                                            |
+| `api.patch(url, data?, config?)` | `Promise<NexusResponse<T>>`                                            |
 
 ### Interceptors
 
@@ -190,7 +198,7 @@ console.log(response.data.name);
 
 ## Error Handling
 
-The client throws `HttpClientError` for:
+The client throws `HttpError` for:
 
 - HTTP non-2xx responses (`ERR_BAD_RESPONSE`)
 - Network failures (`ERR_NETWORK`)
