@@ -12,11 +12,23 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/nexus.js",
+      "require": "./dist/nexus.cjs"
+    }
+  },
   "keywords": [
     "http",
     "client",
+    "server",
     "fetch",
-    "typescript"
+    "typescript",
+    "javascript",
+    "node",
+    "browser",
+    "nextjs",
+    "react"
   ],
   "author": "thegibi",
   "license": "MIT",

@@ -1,4 +1,4 @@
-import nexus, { HttpError, HttpStatusCode } from '@nexus';
+import nexus, { HttpError, HttpStatusCode } from './nexus';
 
 const api = nexus.create({
   baseURL: 'https://jsonplaceholder.typicode.com',
